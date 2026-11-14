@@ -16,10 +16,10 @@
 ## 1. O problema
 
 - O que o cliente disse que é o problema: o contas a pagar lança, paga e baixa cerca de 400 boletos por dia à mão, e a empresa paga juros e multa por atraso. "Contratei para automatizar o boleto" (CFO, Dossiê; Gemini 00:19:59, 00:21:20).
-- O que o grupo entende que é o problema: a Já Chegou paga notas que ninguém conferiu. Só 0,7% das notas do CD batem sozinhas com a ordem (Dossiê, Anexo 3), a doca aceita ou recusa a carga inteira e, para o jurídico, "aceitar a nota é aceitar o pedido" (Dossiê). O erro é do fornecedor, mas a conta fica com a Já Chegou: nada volta. O atraso é consequência: a conferência manual leva 14 dias da nota ao lançamento no CD (Dossiê, Anexo 3).
-- Onde, no caminho do pedido de compra até o pagamento, ele aparece: entre a nota e a doca. A nota quase sempre chega antes da mercadoria, mas "ninguém a olha antes da doca" (compras, Dossiê). Depois, na conferência manual de ordem, nota e recebido, e na lista do dia, que o CFO aprova item a item com o saldo que muda ao longo do dia.
+- O que o grupo entende que é o problema: o recebimento do CD só tem duas saídas, aceitar ou recusar a carga inteira, e aceita para não haver ruptura. Ao aceitar, a Já Chegou assume a nota como veio, com item a mais ou a menos: para o jurídico, "aceitar a nota é aceitar o pedido" (Dossiê). O erro é do fornecedor, mas a conta e o retrabalho ficam com a Já Chegou, e a divergência só aparece na doca, quando já não há tempo de resolver na origem. A correção manual depois do aceite segura o pagamento e gera os juros que o CFO quer eliminar.
+- Onde, no caminho do pedido de compra até o pagamento, ele aparece: no recebimento do CD, que confere a nota física só na hora de descarregar, sem validação no sistema (Gemini 00:04:15), e decide entre aceitar ou recusar tudo (Gemini 00:05:58). Depois, na conferência e correção manual, que leva 14 dias da nota ao lançamento no CD e segura o pagamento (Dossiê, Anexo 3).
 - Quem sente a dor (por papel: CFO, controller, compras, outro): CFO (juros, margem e aprovação de cada pagamento), controller e os 5 analistas terceirizados (fila manual, provisão no fechamento), compras (doca sem aviso, ruptura quando o fornecedor bloqueia entrega).
-- Evidência (dossiê ou reunião): pagar errado custa R$ 543 mil por mês e o recuperado é zero em todos os meses (Dossiê, Anexos 2 e 3). Em janeiro, 76% do valor saiu depois do vencimento (Dossiê, Anexo 3). Conferir uma nota de 80 itens leva mais de 1h30 (Dossiê).
+- Evidência (dossiê ou reunião): 41% do valor é pago depois do vencimento, com R$ 122 mil por mês de juros e multa (Dossiê, Anexos 2 e 3). Em janeiro, 76% do valor saiu depois do vencimento (Dossiê, Anexo 3). Pagar errado custa R$ 543 mil por mês, e o recuperado é zero em todos os meses (Dossiê, Anexos 2 e 3). Só 0,7% das notas do CD batem sozinhas com a ordem (Dossiê, Anexo 3).
 
 ## 2. O número a mover
 
@@ -35,42 +35,40 @@
 | Campo | Valor | Fonte |
 | --- | --- | --- |
 | Indicador (como a perda é medida) | P1: pago sem mercadoria correspondente, menos o recuperado, em R$ e como taxa sobre o valor das notas | Dossiê, Anexo 2 |
-| Baseline (valor hoje) | R$ 543 mil por mês, ou 1,56% dos R$ 34,8 milhões em notas | Dossiê, Anexos 1 e 2; taxa é conta do grupo |
+| Baseline (valor hoje) | R$ 543 mil por mês, ou 1,56% dos R$ 34,8 milhões em notas; recuperado zero | Dossiê, Anexos 1 a 3; taxa é conta do grupo |
 | Período do baseline | Média de jan a set, com faixa de R$ 136 mil a R$ 1,8 milhão; abril concentrou quase 40% do período | Dossiê, Anexo 2 |
 | Quem assina o baseline | Controller, dono do processo, e CFO, antes de mudar qualquer coisa | A combinar |
-| Meta | Taxa de P1 do CD cair pela metade em 8 semanas, medida em média móvel de 4 semanas, sem a ruptura passar de 1,2 ponto | Suposição do grupo; ruptura em Dossiê, Anexo 2 |
-| Prazo da meta | Primeiro valor em até 4 semanas (quick win); meta cheia em 8 semanas | Dossiê; Briefing |
-| Indicador do quick win | Valor pago depois do vencimento: baseline de 41% (média de jan a set) e R$ 122 mil por mês de juros e multa. Meta: ficar abaixo de 16% sem força-tarefa | Dossiê, Anexos 2 e 3; meta é suposição do grupo |
+| Meta | Reduzir em 50% a perda líquida (pago sem mercadoria menos o recuperado do fornecedor), sem a ruptura passar de 1,2 ponto e sem mudar a regra de aceitar a carga | Suposição do grupo; ruptura em Dossiê, Anexo 2 |
+| Prazo da meta | Primeiras divergências registradas e cobradas do fornecedor até a semana 4 (quick win); meta cheia em 8 semanas | Dossiê; Briefing |
+| Indicador do quick win | Juros e multa pagos por mês: baseline de R$ 122 mil, com 41% do valor pago depois do vencimento. Meta: cair 50% até a semana 4 | Baseline no Dossiê, Anexos 2 e 3; meta é suposição do grupo |
 
-- Por que esta perda, e não as outras três: P1 é 4,5 vezes P2 (R$ 543 mil contra R$ 122 mil) e 76% da perda em reais do contas a pagar (Dossiê, Anexo 2). P2 entra como indicador do quick win porque é o número que o CFO acompanha.
+- Por que esta perda, e não as outras três: P1 é 4,5 vezes os juros (R$ 543 mil contra R$ 122 mil por mês) (Dossiê, Anexo 2). Ela também puxa o atraso: toda nota aceita com divergência exige correção manual antes de pagar, o que trava a aprovação e gera juros (Gemini 00:21:20, 00:29:52). Ruptura fica como limite da meta, não como alvo. Juros entram como o indicador do quick win porque são a dor que o CFO trouxe e a métrica que ele acompanha.
 - Como medir apesar da variação mensal: em taxa (P1 sobre o valor das notas e percentual pago depois do vencimento), em média móvel, e separando abril e setembro. Setembro não serve de baseline para atraso: os 16% vieram de uma semana de força-tarefa do controller, e o processo não mudou (Dossiê).
 
 ## 3. A prioridade
 
-Os nomes das frentes são os que o time interno já discutiu (Dossiê).
-
 | Frente | Perda que move | Retorno | Tempo até o primeiro valor (5 = mais rápido) | Esforço (5 = menor esforço) | Total | Depende de | Confiança |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| A. Check antecipado: confrontar a nota com a ordem antes de a mercadoria chegar e avisar compras e a doca, só em leitura no início | P1, e P2 por tirar a conferência do caminho | 5 | 4 | 4 | 13 | Credencial de serviço na captura de NF, usuário de leitura no ERP, agenda de doca | Alta |
-| B. Priorização de caixa e aprovação: lista do dia do CFO ordenada por vencimento e risco de juros, marcando duplicidade e nota sem ordem | P2, e P1 nas duplicidades | 3 | 5 | 4 | 12 | CSV diário de títulos, já liberado | Média |
-| C. Conciliação ordem × nota × recebido, com conversão de unidade, depois do recebimento | P1 e P4 | 3 | 2 | 2 | 7 | Acesso ao WMS, ainda não pedido | Média |
-| D. Cadastro e ordem complementar, na origem | P1 e P4 | 2 | 1 | 2 | 5 | Três áreas e o cadastro por planilha | Baixa |
+| A. Check antecipado da nota do CD, assim que ela é emitida e antes do caminhão: conferir nota × pedido, avisar compras do que diverge, deixar pronta a correção do ERP e registrar a diferença. O que bate segue direto para a fila de pagamento por vencimento | P2 (juros) e P1 | 5 | 5 | 4 | 14 | CSV diário de títulos (liberado), credencial de serviço na captura de NF, usuário de leitura no ERP | Alta |
+| B. Cobrar formalmente do fornecedor a diferença registrada (abatimento na nota seguinte), no lugar da negociação verbal | P1 | 4 | 3 | 3 | 10 | O registro da diferença feito pela frente A e a regra do jurídico | Baixa: o recuperado hoje é zero |
+| C. Corrigir o cadastro de conversão caixa × unidade, que gera divergência | P1 | 3 | 2 | 3 | 8 | Cadastro por planilha e WMS que não converte unidade | Média |
+| D. Automatizar o lançamento de boletos, o pagamento e a baixa no ERP | P2 e P4 | 2 | 3 | 2 | 7 | API do banco, que não existe, e escrita no ERP | Baixa |
 
-- Frente escolhida para começar: A, o check antecipado, com a lista do dia de B como primeiro valor do quick win.
-- Por quê: A ataca a maior perda (P1) no único momento em que ainda dá para agir, antes de a mercadoria entrar. Compras pediu isso: "Se eu soubesse antes, planejava a equipe e recusava na hora" (Dossiê). B entrega na semana 1 ou 2 com um dado que já está liberado e mostra ao CFO os juros caindo enquanto as credenciais de A são resolvidas. As duas só leem: nada escreve no ERP.
-- O que fica para depois, e por quê:
-  - **Semanas 1 a 4 (quick win):** lista do dia priorizada para o CFO (B) e check antecipado das notas do CD (A), em leitura, com uma pessoa decidindo.
-  - **Semanas 5 a 8:** devolução e recusa parcial no ERP, que precisam de escrita e de uma homologação atualizada (a atual é uma cópia de março), e conversão de unidade (C) se a H1 se confirmar.
-  - **Depois das 8 semanas:** pagamento em lote, porque o plano do banco não tem API (Dossiê, Anexo 6), e D, porque depende de três áreas e a ordem complementar leva de 2 dias a 3 meses (Dossiê).
+- Frente escolhida para começar: A, como quick win, atacando primeiro a dor do CFO: pagar em dia e parar de pagar juros. É o check antecipado das notas do CD, começando pelos fornecedores com mais divergência. Ele não muda a regra de aceitar ou recusar a carga: muda o momento em que a divergência é descoberta, da doca para a emissão da nota.
+- Por quê: entra pelo objetivo principal do CFO, que é parar de pagar juros (Gemini 00:21:20, 00:29:52; Dossiê). Hoje 41% do valor sai depois do vencimento, e a conferência manual leva 14 dias da nota ao lançamento no CD (Dossiê, Anexo 3). Se a correção já estiver pronta quando a carga é aceita, a nota não fica parada e é paga em dia. Ao mesmo tempo, a diferença registrada vira a base para cobrar o fornecedor e atacar os R$ 543 mil de P1. É rápido porque não depende de integração bancária nem de mudar a regra de recebimento: usa a nota que a captura de NF já busca na SEFAZ, a ordem do ERP e o CSV diário de títulos, já liberado (Dossiê, Anexo 6). A nota quase sempre chega antes da mercadoria (Dossiê), e o pagamento sai em média em 45 dias (Gemini 00:15:36), então há folga para corrigir antes de vencer. No quick win, a correção fica preparada para o analista lançar: nada escreve no ERP sem homologação, e a atual é uma cópia de março (Dossiê, Anexo 6).
+- O que fica para depois, e por quê: o quick win abre caminho para as frentes mais robustas, nesta ordem.
+  - **Semanas 1 a 4 (quick win):** check na emissão da nota, aviso a compras antes do caminhão, correção do ERP preparada, registro da diferença e fila de pagamento por vencimento, com alerta das notas paradas perto de vencer. O relatório semanal ao CFO mostra os juros pagos e o valor das divergências registradas.
+  - **Semanas 5 a 8:** B, com a cobrança formal da diferença registrada, e o check entrando no fluxo de aprovação, incluindo o bloqueio de pagamento duplicado (Gemini 00:07:47; Dossiê, Anexo 4). C entra se a H1 se confirmar.
+  - **Depois das 8 semanas:** D, porque o banco não tem API (Dossiê, Anexo 6) e automatizar antes só acelera um pagamento que pode estar errado. Aceite parcial com nota de devolução também fica para depois: muda a regra de recebimento, o que já foi tentado e não andou (Gemini 00:18:22, 00:43:06), e exige escrita no ERP.
 
 ## 4. A reformulação do pedido do CFO
 
 | | Texto |
 | --- | --- |
 | O pedido, como o CFO trouxe | Automatizar lançar, pagar e baixar os boletos sem digitação, e parar de pagar juros e multa (Briefing; Dossiê). |
-| O pedido, como o grupo propõe | Atender uma parte e reenquadrar o resto: atacar os juros já com a lista do dia, e conferir a nota antes de a mercadoria chegar, para parar de pagar o que não foi recebido. A automação do boleto vem depois do check. |
-| Por que a mudança move mais o número | Abrindo a perda em ramos (P1 + P2 + P4 = R$ 710 mil por mês), o pedido do CFO cai em P2 e P4: R$ 167 mil, 24% do total. Atendido como veio, ele aumentaria a perda: pagar mais rápido notas que só batem sozinhas em 0,7% dos casos, com recuperado zero, tira a janela em que o erro ainda pode ser pego. E tirar o CFO da aprovação remove a única trava contra pagar duas vezes. |
-| Como o grupo vai apresentar isso ao CFO | Começar pelo que ele pediu, com o número dele: o atraso caiu para 16% em setembro, mas com uma semana de força-tarefa, e a média é 41%. A lista do dia sustenta esse nível sem força-tarefa. Depois, mostrar os R$ 543 mil por mês que saem sem mercadoria e nunca voltam, e o check antecipado como a forma de parar isso sem brigar com o fornecedor na doca. |
+| O pedido, como o grupo propõe | Parar de descobrir o erro do fornecedor na doca: conferir nota × pedido assim que a nota é emitida, para que a nota aceita já chegue com a correção pronta e seja paga em dia, e a diferença fique registrada para cobrar do fornecedor. A regra de aceitar a carga continua. |
+| Por que a mudança move mais o número | A correção manual feita depois do aceite é o que segura o pagamento e gera juros: antecipá-la ataca os juros e, ao mesmo tempo, P1, que vale 4,5 vezes mais (R$ 543 mil contra R$ 122 mil por mês). Abrindo a perda em ramos, o pedido como veio cobre P2 e P4: R$ 167 mil de R$ 710 mil por mês. |
+| Como o grupo vai apresentar isso ao CFO | Começar pela dor dele, com o número dele: R$ 122 mil por mês de juros e 41% do valor pago depois do vencimento. O quick win em até 4 semanas mostra os juros caindo num relatório semanal, junto com as divergências registradas, sem mexer na regra de recebimento que protege contra a ruptura. Depois, mostrar os R$ 543 mil pagos sem mercadoria correspondente, que nunca voltam. |
 
 ## 5. Hipóteses e o que falta saber
 
@@ -78,20 +76,23 @@ Os nomes das frentes são os que o time interno já discutiu (Dossiê).
 
 | # | Hipótese | Como confirmar | Se estiver errada, o que muda |
 | --- | --- | --- | --- |
-| H1 | Boa parte de P1 no CD vem de unidade de medida (caixa × unidade) e de falta física, e não de item trocado | Classificar uma amostra de notas do CD nas exceções 1 a 8 do Dossiê (Anexo 4); o WMS não converte caixa em unidade | Se o grosso for item trocado ou nota sem ordem, D sobe na prioridade |
-| H2 | O atraso vem da conferência manual (14 dias até o lançamento no CD) e não da falta de saldo | Cruzar os títulos pagos com atraso, do CSV diário, com os dias da nota até o lançamento | Se for saldo, B vira a frente principal e A perde parte do efeito em P2 |
-| H3 | Avisar a doca antes faz compras recusar ou receber diferente sem aumentar a ruptura | Piloto com poucos fornecedores do CD, acompanhando a ruptura (1,2 ponto hoje) | Se a ruptura subir, o check só alerta e a correção passa para a conciliação (C) |
-| H4 | O atraso de setembro (16%) não se sustenta sem a força-tarefa | Acompanhar outubro e novembro no CSV diário de títulos | Se se sustentar, P2 pesa menos e o quick win se apoia só em A |
+| H1 | Parte relevante da divergência no CD é erro de conversão caixa × unidade, já que o WMS não converte (Dossiê) | Classificar uma amostra de notas do CD nas exceções 1 a 8 do Dossiê (Anexo 4) | A frente C perde força e o foco fica no check e na cobrança |
+| H2 | A maior parte dos juros vem de notas paradas na conferência e na correção manual (14 dias até o lançamento no CD) | Cruzar os títulos pagos com atraso, do CSV diário, com os dias da nota até o lançamento | Se o atraso vier da fila de boletos ou do saldo, o quick win se apoia na fila por vencimento e a frente D sobe na prioridade |
+| H3 | Avisar compras antes do caminhão não aumenta a ruptura (1,2 ponto hoje) | Piloto com poucos fornecedores do CD, acompanhando a ruptura | O check só alerta, e a diferença segue para a cobrança (B) |
+| H4 | A correção feita logo no aceite cabe no prazo médio de 45 dias, sem gerar atraso | Comparar a data de recebimento no CD com o vencimento de cada nota | O quick win precisa priorizar as notas de vencimento curto |
+| H5 | O atraso de setembro (16%) não se sustenta sem a força-tarefa | Acompanhar outubro e novembro no CSV diário de títulos | Se se sustentar, o baseline de juros do quick win precisa ser revisto |
 
 ### O que falta saber
 
 | # | Pergunta | Para quem (por papel) | Por que importa |
 | --- | --- | --- | --- |
-| Q1 | Quanto dos R$ 543 mil de P1 é do CD e quanto é das lojas? | Controller | O CD tem 1,9 mil notas e cerca de 64% do valor (Dossiê, Anexo 1); define o alcance do check no CD |
-| Q2 | Quanto custou a semana de força-tarefa de setembro, e o atraso de outubro já voltou a subir? | Controller e CFO | Define o baseline de P2 e o custo da alternativa atual |
+| Q1 | Quanto dos R$ 543 mil de P1 é do CD e quanto é das lojas? | Controller | O CD tem 1,9 mil notas e cerca de 64% do valor (Dossiê, Anexo 1); define o alcance do check |
+| Q2 | Quanto custou a semana de força-tarefa de setembro, e o atraso de outubro já voltou a subir? | Controller e CFO | Define o baseline de juros do quick win |
 | Q3 | Quando saem a credencial de serviço da captura de NF e o usuário de leitura no ERP, com o termo de confidencialidade? | Controller e área fiscal | Hoje a credencial é o login de um analista terceirizado; sem isso, o check não começa |
-| Q4 | O jurídico aceita recusa parcial ou nota de devolução quando a divergência é vista antes da doca? | Controller, com o jurídico | Define se o check pode virar recusa parcial ou só alerta |
-| Q5 | Por que abril concentrou quase 40% de P1? | Controller | Um evento único, como um fornecedor ou um item, muda a prioridade e o baseline |
+| Q4 | Quanto tempo leva a correção no ERP de uma nota aceita com divergência, e quem faz? | Controller | Se for o que atrasa o pagamento, é onde o quick win reduz juros |
+| Q5 | O fornecedor aceita cancelar e reemitir a nota antes da entrega, ou dar abatimento na nota seguinte? | Compras | Define se a divergência vista antes do caminhão pode ser resolvida na origem ou só cobrada depois |
+| Q6 | O jurídico aceita recusa parcial ou nota de devolução quando a divergência é vista antes da doca? | Controller, com o jurídico | Define se o aceite parcial pode sair do "depois das 8 semanas" |
+| Q7 | Por que abril concentrou quase 40% de P1? | Controller | Um evento único, como um fornecedor ou um item, muda o baseline |
 
 ## 6. Quem decide, quem paga, quem sente e quem libera
 
