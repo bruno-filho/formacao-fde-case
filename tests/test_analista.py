@@ -273,7 +273,7 @@ def test_servidor_mcp_expoe_as_tools_e_trava_a_alcada(casos):
     async def rodar():
         async with Client(analista.servidor) as c:
             nomes = {t.name for t in (await c.list_tools()).tools}
-            assert nomes == {"listar_fila", "ler_proposta", "decidir", "delegar_ao_motor"}
+            assert nomes == {"listar_fila", "mostrar_fila", "ler_proposta", "decidir", "delegar_ao_motor"}
             fila = json.loads((await c.call_tool("listar_fila", {})).content[0].text)
             assert fila["fila"][0]["nota_id"] == casos["e3"]
             r = json.loads((await c.call_tool("decidir", {"nota_id": casos["e5"], "decisao": "aprovar",

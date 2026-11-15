@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fila do analista</title>
+<style>
+  :root { color-scheme: light dark; --borda: #8884; --destaque: #2563eb; --erro: #b91c1c; --ok: #15803d; }
+  body { font: 14px/1.4 system-ui, sans-serif; margin: 0; padding: 12px; background: transparent; }
+  h1 { font-size: 16px; margin: 0 0 4px; }
+  .total { margin: 0 0 12px; color: #888; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--borda); }
+  td.num, th.num { text-align: right; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover, tbody tr.ativa { background: #8882; }
+  #proposta { margin-top: 16px; border: 1px solid var(--borda); border-radius: 6px; padding: 12px; }
+  #proposta[hidden] { display: none; }
+  pre { white-space: pre-wrap; font-size: 12px; max-height: 240px; overflow: auto; }
+  button, select, textarea { font: inherit; }
+  textarea { width: 100%; min-height: 48px; box-sizing: border-box; }
+  .acoes { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+  .erro { color: var(--erro); }
+  .ok { color: var(--ok); }
+</style>
+</head>
+<body>
+<h1>Fila do analista</h1>
+<p class="total" id="total">Carregando a fila…</p>
+<table>
+  <thead><tr><th>Nota</th><th>Fornecedor</th><th>Classificação</th><th>Ação na doca</th><th>Encaminhamento</th><th class="num">Valor em risco</th></tr></thead>
+  <tbody id="linhas"></tbody>
+</table>
+
+<section id="proposta" hidden>
+  <h2 id="titulo"></h2>
+  <div id="resumo"></div>
+  <pre id="evidencia"></pre>
+  <label>Justificativa<br><textarea id="justificativa" placeholder="Por que, em pelo menos 10 caracteres"></textarea></label>
+  <div class="acoes">
+    <button id="aprovar">Aprovar</button>
+    <select id="acao_nova">
+      <option value="receber">receber</option>
+      <option value="receber_parcial">receber_parcial</option>
+      <option value="recusar">recusar</option>
+    </select>
+    <button id="alterar">Alterar ação</button>
+  </div>
+  <p id="retorno"></p>
+</section>
+
+<script>
+// A tela não decide nada: só mostra o que as tools devolvem e chama ler_proposta e decidir pelo host.
+// Protocolo do MCP Apps (io.modelcontextprotocol/ui): JSON-RPC por postMessage com o host.
+let proximoId = 1;
+const pendentes = new Map();
+let notaAberta = null;
+
+function enviar(method, params) {
+  const id = proximoId++;
+  window.parent.postMessage({ jsonrpc: "2.0", id, method, params }, "*");
+  return new Promise((resolve, reject) => pendentes.set(id, { resolve, reject }));
+}
+
+function notificar(method, params) {
+  window.parent.postMessage({ jsonrpc: "2.0", method, params }, "*");
+}
+
+function dadosDoResultado(resultado) {
+  if (resultado && resultado.structuredContent) {
+    const s = resultado.structuredContent;
+    return s.result !== undefined && Object.keys(s).length === 1 ? s.result : s;
+  }
+  const texto = (resultado && resultado.content || []).find(c => c.type === "text");
+  try { return texto ? JSON.parse(texto.text) : null; } catch { return null; }
+}
+
+async function chamarTool(name, args) {
+  return dadosDoResultado(await enviar("tools/call", { name, arguments: args }));
+}
+
+function moeda(v) {
+  return v == null ? "—" : Number(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+function texto(el, valor) { el.textContent = valor == null ? "—" : String(valor); return el; }
+
+function desenharFila(dados) {
+  const total = document.getElementById("total");
+  const corpo = document.getElementById("linhas");
+  corpo.replaceChildren();
+  if (!dados || dados.erro) { total.className = "erro"; texto(total, dados ? dados.erro : "Sem dados da fila."); return; }
+  total.className = "total";
+  texto(total, `${dados.fila.length} propostas · valor em risco total ${moeda(dados.total_valor_em_risco)} · nível ${dados.nivel_do_analista}`);
+  for (const l of dados.fila) {
+    const tr = document.createElement("tr");
+    tr.dataset.nota = l.nota_id;
+    for (const v of [l.nota_id, l.fornecedor || l.fornecedor_id, l.classificacao, l.acao_doca, l.encaminhamento]) {
+      tr.append(texto(document.createElement("td"), v));
+    }
+    const td = texto(document.createElement("td"), moeda(l.valor_em_risco));
+    td.className = "num";
+    tr.append(td);
+    tr.addEventListener("click", () => abrir(l.nota_id, tr));
+    corpo.append(tr);
+  }
+}
+
+async function abrir(notaId, tr) {
+  document.querySelectorAll("tbody tr").forEach(x => x.classList.remove("ativa"));
+  tr.classList.add("ativa");
+  notaAberta = notaId;
+  const p = await chamarTool("ler_proposta", { nota_id: notaId });
+  document.getElementById("proposta").hidden = false;
+  texto(document.getElementById("retorno"), "");
+  if (!p || p.erro) { texto(document.getElementById("resumo"), p ? p.erro : "Sem resposta."); return; }
+  texto(document.getElementById("titulo"), `${notaId} · ${p.proposta.classificacao} · ${p.encaminhamento}`);
+  texto(document.getElementById("resumo"),
+    `Fornecedor ${p.nota.fornecedor_id}${p.fornecedor && p.fornecedor.bloqueado ? " (bloqueado)" : ""} · ` +
+    `nota ${moeda(p.nota.valor_total)} · ação proposta: ${p.proposta.acao_doca} · ${p.proposta.justificativa || ""}`);
+  texto(document.getElementById("evidencia"), p.comparar_itens);
+}
+
+async function decidir(decisao) {
+  const retorno = document.getElementById("retorno");
+  const args = { nota_id: notaAberta, decisao, justificativa: document.getElementById("justificativa").value };
+  if (decisao === "alterar") args.acao_doca = document.getElementById("acao_nova").value;
+  const r = await chamarTool("decidir", args);
+  if (r && r.gravada) {
+    retorno.className = "ok";
+    texto(retorno, `Gravada: ${r.decisao.decisao} · ${r.decisao.acao_doca}. A nota saiu da fila.`);
+    const tr = document.querySelector(`tr[data-nota="${notaAberta}"]`);
+    if (tr) tr.remove();
+  } else {
+    // A recusa é a resposta: mostra a mensagem da tool, sem tentar de novo.
+    retorno.className = "erro";
+    texto(retorno, r ? r.erro : "A tool não respondeu.");
+  }
+}
+
+window.addEventListener("message", (ev) => {
+  const m = ev.data;
+  if (!m || m.jsonrpc !== "2.0") return;
+  if (m.id !== undefined && pendentes.has(m.id)) {
+    const { resolve, reject } = pendentes.get(m.id);
+    pendentes.delete(m.id);
+    m.error ? reject(m.error) : resolve(m.result);
+    return;
+  }
+  if (m.method === "ui/notifications/tool-result") desenharFila(dadosDoResultado(m.params));
+});
+
+document.getElementById("aprovar").addEventListener("click", () => decidir("aprovar"));
+document.getElementById("alterar").addEventListener("click", () => decidir("alterar"));
+
+enviar("ui/initialize", {
+  protocolVersion: "2026-01-26",
+  appInfo: { name: "fila-do-analista", version: "0.1.0" },
+  appCapabilities: {},
+}).then(() => notificar("ui/notifications/initialized", {}));
+</script>
+</body>
+</html>
