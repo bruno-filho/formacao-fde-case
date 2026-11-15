@@ -28,6 +28,7 @@ from mcp.server.mcpserver import MCPServer  # noqa: E402
 
 from jachegou.base import ACOES, CLASSIFICACOES, NIVEIS, Base  # noqa: E402
 from jachegou.comparar import comparar  # noqa: E402
+from jachegou.regua import nivel_minimo as _nivel_minimo  # noqa: E402
 
 base = Base()
 SAIDAS = Path(os.environ.get("FDE_SAIDAS") or RAIZ / "saidas")
@@ -154,17 +155,10 @@ def ler_regua() -> dict:
 
 
 def nivel_minimo(classificacao: str, nota: dict) -> str:
-    """O nível mais baixo que a régua aceita. O agente pode subir um caso, nunca descer."""
-    r = base.regua
-    if classificacao == "E6":
-        return "bloqueio"
-    if nota["valor_total"] > r["teto_coordenacao"] or base.fornecedores[nota["fornecedor_id"]]["bloqueado"]:
-        return "diretoria"
-    if classificacao in {"E5", "E7", "E8"}:
-        return "coordenacao"
-    if classificacao in {"E1", "E2", "E3", "E4"}:
-        return "analista" if nota["valor_total"] <= r["teto_analista"] else "coordenacao"
-    return "regra"
+    """O nível mais baixo que a régua aceita. O agente pode subir um caso, nunca descer.
+
+    A lógica fica em `jachegou.regua`, a mesma do servidor do analista."""
+    return _nivel_minimo(classificacao, nota, base)
 
 
 @servidor.tool()
