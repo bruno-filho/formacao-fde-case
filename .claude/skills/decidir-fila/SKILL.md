@@ -11,6 +11,11 @@ ambiente (`FDE_ANALISTA_ID` e `FDE_ANALISTA_NIVEL`), não da conversa.
 
 ## Caminho feliz
 
+Se o host desenha MCP Apps (o Claude Desktop, por exemplo), abra a fila com `mostrar_fila`: ela aparece como
+uma tela no chat, e os botões Aprovar e Alterar ação chamam `decidir` com as mesmas travas. No Claude Code
+no terminal, que não desenha a tela, siga em texto com `listar_fila`, como abaixo.
+
+
 1. O analista pede "mostra a minha fila". Chame `listar_fila` e mostre a fila numa tabela: nota,
    fornecedor, destino, classificação, ação na doca proposta, encaminhamento, valor em risco e valor da
    nota, na ordem em que a tool devolveu. Abaixo da tabela, o total de valor em risco que a tool devolveu.
