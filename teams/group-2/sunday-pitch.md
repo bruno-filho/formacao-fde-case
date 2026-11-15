@@ -11,7 +11,7 @@
 ## Grupo
 
 - Grupo: Grupo 2
-- Integrantes: Bruno Filho, Daniel Rivelino, Danillo Andrade e Marcelo Calazans
+- Integrantes: Bruno Filho, Daniel Rivelino, Danillo Andrade, Leonardo Helal e Marcelo Calazans (PM)
 
 ## Roteiro
 
@@ -20,8 +20,8 @@
 | 1 | Problema | a definir pela coordenação | Bruno |
 | 2 | Número | a definir pela coordenação | Bruno |
 | 3 | Solução | a definir pela coordenação | Marcelo Calazans |
-| 4 | Demo | a definir pela coordenação | Daniel Rivelino |
-| 5 | Eval | a definir pela coordenação | Danillo Andrade |
+| 4 | Demo | a definir pela coordenação | Daniel Rivelino, com Leonardo Helal |
+| 5 | Eval | a definir pela coordenação | Danillo Andrade, com Leonardo Helal |
 | 6 | Próximos passos | a definir pela coordenação | Bruno |
 
 ### 1. Problema
@@ -90,6 +90,7 @@
 - O que o grupo faria na próxima semana com o cliente:
   - Rodar a fila em modo sombra sobre as notas do CD, com o controller e o CFO assinando o baseline.
   - Ligar a delegação ao motor real do Grupo 1, primeiro só como simulação.
+  - Levar o servidor `ja-chegou-analista` para produção: hoje ele roda na máquina do analista e lê arquivos locais; em produção, fica atrás do Cloudflare Access, com a identidade de cada analista, e passa a chamar a API da solução em vez de ler arquivos.
   - Pedir os acessos que bloqueiam a primeira entrega: credencial de serviço na captura de NF, usuário de leitura no ERP e homologação atualizada (Dossiê, Anexo 6).
 - Fica para depois:
   - o processo de **notas de devolução**, para recuperar o que hoje é zero;
