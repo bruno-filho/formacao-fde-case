@@ -182,16 +182,40 @@ def test_skill_no_formato_agent_skills(skill):
 
 
 SKILL_DE_SETUP = "setup-fde"
+SKILL_DO_ANALISTA = "decidir-fila"
 
 
 def test_so_as_tres_skills_e_nada_que_o_agente_nao_consiga_ler():
     """O agente não tem Read nem Bash: o que a skill precisa está no SKILL.md ou numa tool do ja-chegou.
 
-    Além das três do agente, o projeto tem a `setup-fde`, da sessão principal: o agente só carrega as três pelo campo `skills`.
+    Além das três do agente, o projeto tem a `setup-fde` e a `decidir-fila`, da sessão principal: o agente só
+    carrega as três pelo campo `skills`.
     """
-    assert sorted(p.name for p in SKILLS_DIR.iterdir() if p.is_dir()) == sorted([*SKILLS, SKILL_DE_SETUP])
+    assert sorted(p.name for p in SKILLS_DIR.iterdir() if p.is_dir()) == sorted([*SKILLS, SKILL_DE_SETUP, SKILL_DO_ANALISTA])
     for skill in SKILLS:
         assert [p.name for p in (SKILLS_DIR / skill).iterdir()] == ["SKILL.md"]
+
+
+def test_agente_nao_alcanca_o_servidor_do_analista():
+    """#AC-6: o servidor que decide é separado; o auditor segue só com mcp__ja-chegou__* e nem o cita."""
+    campos, _ = _frontmatter(AGENTE)
+    assert _lista(campos.get("tools")) == [f"mcp__{SERVIDOR}__*"]
+    assert SKILL_DO_ANALISTA not in _lista(campos.get("skills"))
+    assert "ja-chegou-analista" not in AGENTE.read_text(encoding="utf-8")
+
+
+def test_skill_decidir_fila_diz_o_que_a_sessao_nunca_faz():
+    campos, corpo = _frontmatter(SKILLS_DIR / SKILL_DO_ANALISTA / "SKILL.md")
+    assert campos.get("name") == SKILL_DO_ANALISTA
+    descricao = campos.get("description", "")
+    assert isinstance(descricao, str) and "Use " in descricao and ": " not in descricao
+    assert re.match(r"^[^.?]*\?", descricao)
+    nunca = corpo.split("## O que a sessão nunca faz")[1]
+    for trecho in ("Inventar número", "Decidir sem o analista pedir", "Contornar uma recusa"):
+        assert trecho in nunca
+    for tool in ("listar_fila", "ler_proposta", "decidir", "delegar_ao_motor"):
+        assert f"`{tool}`" in corpo
+    assert "Diretoria e bloqueio ficam fora" in corpo
 
 
 def test_classificar_divergencia_cita_a_tool_e_nao_um_script():

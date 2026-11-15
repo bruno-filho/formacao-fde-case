@@ -7,6 +7,15 @@
         "FDE_ORIGEM": "${FDE_ORIGEM:-agente}",
         "FDE_ARQUIVO_PROPOSTAS": "${FDE_ARQUIVO_PROPOSTAS:-propostas.jsonl}"
       }
+    },
+    "ja-chegou-analista": {
+      "command": "uv",
+      "args": ["run", "python", "mcp_server/analista.py"],
+      "env": {
+        "FDE_ANALISTA_ID": "${FDE_ANALISTA_ID:-}",
+        "FDE_ANALISTA_NIVEL": "${FDE_ANALISTA_NIVEL:-analista}",
+        "FDE_ARQUIVO_PROPOSTAS": "${FDE_ARQUIVO_PROPOSTAS:-propostas.jsonl}"
+      }
     }
   }
 }
