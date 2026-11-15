@@ -27,6 +27,7 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ))
 
+from mcp.server.apps import Apps  # noqa: E402
 from mcp.server.mcpserver import MCPServer  # noqa: E402
 
 from jachegou.base import ACOES, NIVEIS, Base  # noqa: E402
@@ -43,8 +44,26 @@ EXCECOES_DELEGAVEIS = {"E1", "E3", "E4"}
 TETO_VALOR_EM_RISCO = 20_000.0
 TETO_VALOR_DA_NOTA = 100_000.0
 
+URI_FILA = "ui://ja-chegou-analista/fila"
+HTML_FILA = Path(__file__).resolve().parent / "ui" / "fila.html"
+apps = Apps()
+
+# As tools com tela entram no Apps antes de o servidor ser criado: o MCPServer as lê da extensão.
+@apps.tool(resource_uri=URI_FILA)
+def mostrar_fila(destino: str | None = None) -> dict:
+    """A mesma fila de listar_fila, desenhada numa tela dentro do chat (MCP App), onde o analista abre a
+    proposta e aprova ou altera a ação na doca. A tela chama ler_proposta e decidir pelo host, com as
+    mesmas travas. Num host sem MCP Apps, o resultado é a fila em texto, igual ao de listar_fila."""
+    return listar_fila(destino=destino)  # definida abaixo; resolvida na hora da chamada
+
+
+apps.add_html_resource(URI_FILA, HTML_FILA.read_text(encoding="utf-8"), name="fila",
+                       title="Fila do analista", description="A fila de propostas, com aprovar e alterar ação")
+
+
 servidor = MCPServer(
     name="ja-chegou-analista",
+    extensions=[apps],
     instructions=(
         "Fila de propostas do check antecipado da Já Chegou, para o analista decidir. "
         "Todo número vem destas tools. Só chame decidir quando o analista pedir, e não contorne uma recusa: "
