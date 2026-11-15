@@ -4,7 +4,7 @@
 >
 > **Fontes:** "Dossiê" é o dossiê pós-reunião do Pack 2; a solução está em `mcp_server/analista.py`, `.claude/skills/decidir-fila/` e `tests/test_analista.py`; o roteiro da demo vem de `teams/group-2/roteiro-demo.md` e a prova das travas de `teams/group-2/eval.md`.
 >
-> **Pendente:** os campos marcados **[a confirmar]** dependem do roteiro da demo e do eval, que estão sendo feitos em paralelo.
+> **Pendente:** o plano B da demo depende das capturas do Daniel Rivelino. O bloco Eval é apresentado pelo Danillo Andrade.
 
 ---
 
@@ -78,12 +78,18 @@
 ### 5. Eval
 
 - Contra o que o agente foi avaliado:
-  - Os testes de `tests/test_analista.py`: um teste por caso de erro e por critério de aceite do servidor.
-  - Os 13 casos do mock do motor em `teams/group-2/motor-mock/`, cada um com a resposta esperada.
-- Resultado: `make check` com 106 testes passando e 3 pulados (os pulados dependem do gabarito de domingo). A tabela trava por trava está em `teams/group-2/eval.md` [a confirmar].
-- Onde o agente erra, e o que isso significa para o cliente: [a confirmar com o eval]. O que já se sabe:
-  - A simulação do motor usa uma regra mínima (E1, E3 e E4, nível analista, até R$ 20 mil), não o motor real do Grupo 1.
-  - A proposta depende da qualidade da conferência: se a ordem ou o recebido estiverem errados na base, a proposta também estará, e a pessoa precisa ler a evidência.
+  - 33 testes do servidor `ja-chegou-analista`, rodados offline sobre a base real com propostas de cada tipo, inclusive chamando pelo protocolo MCP;
+  - 2 testes que provam que o subagente `auditor-de-notas` não alcança nenhuma tool de decisão;
+  - os 13 casos do mock do motor, cada um com a resposta esperada.
+- Resultado: **48 de 48 passaram** (tabela trava por trava em `teams/group-2/eval.md`). Na `main`, `make check` dá 111 passando e 3 pulados.
+  - As **14 tentativas** de decidir fora da regra ou da alçada foram recusadas sem gravar nada.
+  - Nenhuma delegação ao motor gravou decisão.
+  - Frase para o palco: "Mesmo que alguém peça ao Claude, a tool não grava. A trava está no sistema, e o teste prova."
+- Onde o agente erra, e o que isso significa para o cliente:
+  - **A identidade vem do ambiente, sem login.** Em produção, vai para o Cloudflare Access, com a identidade de cada analista.
+  - **Duas sessões podem decidir a mesma nota ao mesmo tempo.** Com o banco da solução, a decisão passa a ser única.
+  - **O texto do modelo não tem eval de ponta a ponta.** Por isso a pessoa lê a evidência antes de decidir, e todo número vem da base.
+  - **A simulação do motor usa uma regra mínima,** não o motor real do Grupo 1.
 
 ### 6. Próximos passos
 
@@ -94,7 +100,7 @@
   - Pedir os acessos que bloqueiam a primeira entrega: credencial de serviço na captura de NF, usuário de leitura no ERP e homologação atualizada (Dossiê, Anexo 6).
 - Fica para depois:
   - o processo de **notas de devolução**, para recuperar o que hoje é zero;
-  - a tela da fila dentro do chat (MCP App);
+  - testar a tela da fila (MCP App) num host de verdade: o código já está na `main`, mas a tela ainda não foi aberta no Claude Desktop;
   - a automação do boleto, que só vem depois da conferência.
 - O que se repete na Terminal Sul: a mesma estrutura de três fontes comparadas, proposta e decisão por alçada. A causa e a regra mudam: lá são contrato, declarado e fiscal; aqui, pedido, nota e recebido.
 - O pedido ao cliente: o CFO patrocinar o modo proposta, aceitando que a aprovação passe por alçada e não por ele item a item, e liberar os acessos acima.
