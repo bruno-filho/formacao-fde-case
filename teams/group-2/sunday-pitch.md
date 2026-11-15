@@ -1,0 +1,106 @@
+# Pitch de domingo · Grupo 2
+
+> **Momento:** pitch dos grupos, domingo, 15/11, às **16h30**.
+>
+> **Fontes:** "Dossiê" é o dossiê pós-reunião do Pack 2; a solução está em `mcp_server/analista.py`, `.claude/skills/decidir-fila/` e `tests/test_analista.py`; o roteiro da demo vem de `teams/group-2/roteiro-demo.md` e a prova das travas de `teams/group-2/eval.md`.
+>
+> **Pendente:** os campos marcados **[a confirmar]** dependem do roteiro da demo e do eval, que estão sendo feitos em paralelo.
+
+---
+
+## Grupo
+
+- Grupo: Grupo 2
+- Integrantes: [a confirmar]
+
+## Roteiro
+
+| # | Bloco | Tempo | Quem fala |
+| --- | --- | --- | --- |
+| 1 | Problema | a definir pela coordenação | Bruno |
+| 2 | Número | a definir pela coordenação | Bruno |
+| 3 | Solução | a definir pela coordenação | [a confirmar] |
+| 4 | Demo | a definir pela coordenação | [a confirmar] (quem faz o roteiro da demo) |
+| 5 | Eval | a definir pela coordenação | [a confirmar] (quem faz o eval) |
+| 6 | Próximos passos | a definir pela coordenação | Bruno |
+
+### 1. Problema
+
+- O problema da Já Chegou, em uma frase: a empresa paga notas fiscais que ninguém conferiu contra o pedido e contra o que chegou. Só 0,7% das notas do CD batem sozinhas com a ordem, e o recuperado é zero (Dossiê, Anexo 3).
+- O pedido do CFO e como o grupo o reformulou:
+  - **Pedido:** "Contratei para automatizar o boleto" (Dossiê). Lançar, pagar e baixar sem digitação, e parar de pagar juros.
+  - **Reformulação:** não ajustar o pedido para bater com a nota, e sim o agente propor uma ação para cada nota e uma pessoa da alçada decidir. Automatizar o boleto antes disso só pagaria mais rápido o que está errado.
+- Quem sente a dor (por papel):
+  - **CFO:** aprova cada pagamento, sem teto, e paga juros.
+  - **Controller e analistas do contas a pagar:** cruzam ordem, nota e recebido à mão, por 14 dias até o lançamento no CD.
+  - **Compras:** a doca aceita a carga inteira para não romper, e o financeiro paga a divergência depois.
+
+### 2. Número
+
+- A perda escolhida: **pagar errado** (P1).
+- Baseline: **R$ 543 mil por mês** pagos sem mercadoria correspondente, média de jan a set, com recuperado zero (Dossiê, Anexo 2). É 1,56% do valor das notas.
+- Meta: parar de pagar sem conferência. Toda nota com divergência passa por uma proposta e pela decisão de uma pessoa do nível certo antes de virar pagamento. A meta em reais (perda líquida pela metade em 8 semanas) é suposição do grupo, a validar no piloto.
+- Por que este número:
+  - P1 é 4,5 vezes os juros (R$ 543 mil contra R$ 122 mil por mês) e 76% da perda em reais do contas a pagar (Dossiê, Anexo 2).
+  - O pedido do CFO, como veio, cobre só P2 e P4: R$ 167 mil de R$ 710 mil por mês.
+
+### 3. Solução
+
+- O fluxo proposto, em cinco passos:
+  1. A nota é conferida contra a ordem e o recebido, e a regra gera uma **proposta** com a ação na doca: receber, receber parcial ou recusar.
+  2. A régua define o **nível** de quem aprova: regra, analista, coordenação, diretoria ou bloqueio.
+  3. O analista abre a fila **dentro do Claude**, pelo servidor MCP `ja-chegou-analista`, ordenada por valor em risco.
+  4. Ele abre a proposta, vê a divergência e a evidência, e **aprova ou altera** a ação, com justificativa.
+  5. Ele pode pedir ao motor de decisão uma **simulação** do que o motor aprovaria. Nada é aprovado pela simulação.
+- Onde entra o agente:
+  - A skill `decidir-fila` guia a sessão do analista: mostra a fila, resume a divergência e confirma o que vai gravar.
+  - O subagente `auditor-de-notas` audita a nota, mas não tem nenhuma tool que decide.
+- Onde o humano decide (modo proposta e alçadas):
+  - Toda decisão é de uma pessoa da alçada. O agente só propõe.
+  - **As travas estão no código, não no prompt:**
+    - o nível é recalculado pela régua e só sobe;
+    - diretoria e bloqueio nunca são decididos por este servidor;
+    - cada proposta é decidida uma vez;
+    - toda recusa devolve `gravada: false` e não grava nada.
+
+### 4. Demo
+
+- O caso que a demo mostra, com três notas da fila gerada por `uv run python baseline/regras.py`:
+  1. **Uma nota que o analista aprova:** [a confirmar] (nota e fornecedor). Ela sai da fila.
+  2. **Uma nota acima da alçada dele:** [a confirmar]. O servidor **recusa** e não grava nada. É o momento forte da demo.
+  3. **Uma nota E6 ou de diretoria:** [a confirmar]. Ela nem aparece na fila do analista.
+- O que o público deve notar:
+  - A pessoa decide; o agente organiza e propõe.
+  - A recusa vem do sistema, não de uma instrução ao modelo: mesmo que alguém peça ao Claude, a tool não grava.
+  - Todo número na tela vem da base, nunca do texto do modelo.
+- Plano B se a demo falhar: capturas de tela de cada passo e a gravação da demo inteira, feitas antes do pitch [a confirmar].
+
+### 5. Eval
+
+- Contra o que o agente foi avaliado:
+  - Os testes de `tests/test_analista.py`: um teste por caso de erro e por critério de aceite do servidor.
+  - Os 13 casos do mock do motor em `teams/group-2/motor-mock/`, cada um com a resposta esperada.
+- Resultado: `make check` com 106 testes passando e 3 pulados (os pulados dependem do gabarito de domingo). A tabela trava por trava está em `teams/group-2/eval.md` [a confirmar].
+- Onde o agente erra, e o que isso significa para o cliente: [a confirmar com o eval]. O que já se sabe:
+  - A simulação do motor usa uma regra mínima (E1, E3 e E4, nível analista, até R$ 20 mil), não o motor real do Grupo 1.
+  - A proposta depende da qualidade da conferência: se a ordem ou o recebido estiverem errados na base, a proposta também estará, e a pessoa precisa ler a evidência.
+
+### 6. Próximos passos
+
+- O que o grupo faria na próxima semana com o cliente:
+  - Rodar a fila em modo sombra sobre as notas do CD, com o controller e o CFO assinando o baseline.
+  - Ligar a delegação ao motor real do Grupo 1, primeiro só como simulação.
+  - Pedir os acessos que bloqueiam a primeira entrega: credencial de serviço na captura de NF, usuário de leitura no ERP e homologação atualizada (Dossiê, Anexo 6).
+- Fica para depois:
+  - o processo de **notas de devolução**, para recuperar o que hoje é zero;
+  - a tela da fila dentro do chat (MCP App);
+  - a automação do boleto, que só vem depois da conferência.
+- O que se repete na Terminal Sul: a mesma estrutura de três fontes comparadas, proposta e decisão por alçada. A causa e a regra mudam: lá são contrato, declarado e fiscal; aqui, pedido, nota e recebido.
+- O pedido ao cliente: o CFO patrocinar o modo proposta, aceitando que a aprovação passe por alçada e não por ele item a item, e liberar os acessos acima.
+
+## Conferência antes de subir ao palco
+
+- [x] Os seis blocos estão preenchidos, na ordem.
+- [ ] Cada bloco tem quem fala.
+- [x] O número aparece com baseline e meta.
+- [ ] A demo tem plano B.
