@@ -11,7 +11,7 @@
 ## Grupo
 
 - Grupo: Grupo 2
-- Integrantes: ____
+- Integrantes: Bruno Filho, Daniel Rivelino, Danillo Andrade, Leonardo Helal e Marcelo Calazans (PM)
 
 ## 1. O problema
 

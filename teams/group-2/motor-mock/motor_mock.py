@@ -1,7 +1,7 @@
 """Mock do motor de decisão do Grupo 1, para o Grupo 2 testar a delegação.
 
-Segue o contrato da #149 (decisão do motor) e da #138 (pedido de delegação e
-relatório). O Clef é simulado: a confiança vem do campo `clef_confidence` da
+Segue o contrato da decisão do motor de decisão e o do pedido de delegação e
+relatório. O Clef é simulado: a confiança vem do campo `clef_confidence` da
 proposta de exemplo. Quando o motor real chegar, só essa fonte muda.
 
 Rode `python motor_mock.py` para ver o relatório da delegação de exemplo.
@@ -21,7 +21,7 @@ NIVEIS_FORA_DO_MOTOR = {"diretoria", "bloqueio"}
 
 @dataclass
 class Criterios:
-    """Parâmetros do motor, que mudam sem deploy (AC-4 da #149)."""
+    """Parâmetros do motor, que mudam sem deploy."""
 
     excecoes_delegaveis: set = field(default_factory=lambda: {"E1", "E3", "E4"})
     teto_valor_em_risco: float = 20_000.0
@@ -82,7 +82,7 @@ def avaliar(proposta: dict, pedido: dict, criterios: Criterios) -> Optional[dict
 
     mode = "shadow" if pedido["dry_run"] or not criterios.delegacao_ligada.get(nivel, False) else "delegated"
 
-    # Nunca chegam ao Clef (AC-2 da #149).
+    # Nunca chegam ao Clef: duplicidade, fornecedor bloqueado e nota acima do teto.
     if (proposta["classification"] == "E6" or proposta.get("supplier_blocked")
             or proposta.get("invoice_value", 0) > criterios.teto_valor_da_nota):
         return _decisao(proposta, pedido, "pending", "rule", "Fora dos critérios do motor: vai para a pessoa.",
