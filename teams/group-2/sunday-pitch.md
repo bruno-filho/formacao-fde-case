@@ -49,7 +49,7 @@
 - O fluxo proposto, em cinco passos:
   1. A nota é conferida contra a ordem e o recebido, e a regra gera uma **proposta** com a ação na doca: receber, receber parcial ou recusar.
   2. A régua define o **nível** de quem aprova: regra, analista, coordenação, diretoria ou bloqueio.
-  3. O analista abre a fila **dentro do Claude**, pelo servidor MCP `ja-chegou-analista`, ordenada por valor em risco.
+  3. O analista abre a fila **dentro do Claude**, pelo servidor MCP `ja-chegou-analista`. Onde o host desenha MCP Apps, como o Claude Desktop, a fila abre como tela no chat; no Claude Code, em texto.
   4. Ele abre a proposta, vê a divergência e a evidência, e **aprova ou altera** a ação, com justificativa.
   5. Ele pode pedir ao motor de decisão uma **simulação** do que o motor aprovaria. Nada é aprovado pela simulação.
 - Onde entra o agente:
@@ -66,14 +66,14 @@
 ### 4. Demo
 
 - O caso que a demo mostra, com três notas da fila gerada por `uv run python baseline/regras.py`:
-  1. **Uma nota que o analista aprova:** [a confirmar] (nota e fornecedor). Ela sai da fila.
-  2. **Uma nota acima da alçada dele:** [a confirmar]. O servidor **recusa** e não grava nada. É o momento forte da demo.
-  3. **Uma nota E6 ou de diretoria:** [a confirmar]. Ela nem aparece na fila do analista.
+  1. **NF-006** (E1, R$ 3.557,60): o analista aprova receber parcial, e a nota sai da fila.
+  2. **NF-017** (E5, R$ 18.316,80): a proposta diz analista, a régua sobe para coordenação e o servidor **recusa** sem gravar nada. É o momento forte da demo.
+  3. **NF-012** (E6, R$ 15.430,84): bloqueio por suspeita de duplicidade. Nem aparece na fila do analista.
 - O que o público deve notar:
   - A pessoa decide; o agente organiza e propõe.
   - A recusa vem do sistema, não de uma instrução ao modelo: mesmo que alguém peça ao Claude, a tool não grava.
   - Todo número na tela vem da base, nunca do texto do modelo.
-- Plano B se a demo falhar: capturas de tela de cada passo e a gravação da demo inteira, feitas antes do pitch [a confirmar].
+- Plano B se a demo falhar: capturas de tela de cada passo e a gravação da demo inteira, feitas antes do pitch [a confirmar com o Daniel]. O roteiro completo está em `teams/group-2/roteiro-demo.md`.
 
 ### 5. Eval
 
