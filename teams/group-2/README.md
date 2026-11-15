@@ -1,5 +1,5 @@
 # Grupo 2
 
-- **Nome do grupo:** a preencher
-- **Integrantes:** a preencher
-- **Fork líder:** a preencher (link do fork, por exemplo `https://github.com/<usuario-do-lider>/formacao-fde-case`)
+- **Nome do grupo:** Grupo 2
+- **Integrantes:** Bruno Filho, Daniel Rivelino, Danillo Andrade e Marcelo Calazans
+- **Fork líder:** https://github.com/bruno-filho/formacao-fde-case
