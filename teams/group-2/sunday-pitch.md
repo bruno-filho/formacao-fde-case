@@ -11,7 +11,7 @@
 ## Grupo
 
 - Grupo: Grupo 2
-- Integrantes: [a confirmar]
+- Integrantes: Bruno Filho, Daniel Rivelino, Danillo Andrade e Marcelo Calazans
 
 ## Roteiro
 
@@ -19,9 +19,9 @@
 | --- | --- | --- | --- |
 | 1 | Problema | a definir pela coordenação | Bruno |
 | 2 | Número | a definir pela coordenação | Bruno |
-| 3 | Solução | a definir pela coordenação | [a confirmar] |
-| 4 | Demo | a definir pela coordenação | [a confirmar] (quem faz o roteiro da demo) |
-| 5 | Eval | a definir pela coordenação | [a confirmar] (quem faz o eval) |
+| 3 | Solução | a definir pela coordenação | Marcelo Calazans |
+| 4 | Demo | a definir pela coordenação | Daniel Rivelino |
+| 5 | Eval | a definir pela coordenação | Danillo Andrade |
 | 6 | Próximos passos | a definir pela coordenação | Bruno |
 
 ### 1. Problema
@@ -101,6 +101,6 @@
 ## Conferência antes de subir ao palco
 
 - [x] Os seis blocos estão preenchidos, na ordem.
-- [ ] Cada bloco tem quem fala.
+- [x] Cada bloco tem quem fala.
 - [x] O número aparece com baseline e meta.
 - [ ] A demo tem plano B.
